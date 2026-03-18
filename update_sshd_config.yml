@@ -1,0 +1,41 @@
+---
+- name: Update SSHD Config on Ubuntu Docker Containers
+  hosts: linux_nodes  # Or the group of containers where you want to apply the changes
+  become: yes  # Run as sudo to modify the sshd_config file
+  tasks:
+    - name: Backup the current sshd_config
+      copy:
+        src: /etc/ssh/sshd_config
+        dest: "/etc/ssh/sshd_config.bak"
+        remote_src: yes
+        backup: yes
+    
+    - name: Ensure proper permissions for sshd_config
+      file:
+        path: /etc/ssh/sshd_config
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Update sshd_config file for ssh settings
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^{{ item.key }}'
+        line: "{{ item.key }} {{ item.value }}"
+        create: yes
+      loop:
+        - { key: 'PermitRootLogin', value: 'yes' }
+        - { key: 'PasswordAuthentication', value: 'yes' }
+        - { key: 'PubkeyAuthentication', value: 'yes' }
+        - { key: 'Include', value: '/etc/ssh/sshd_config.d/*.conf' }
+        - { key: 'ChallengeResponseAuthentication', value: 'no' }
+        - { key: 'UsePAM', value: 'yes' }
+        - { key: 'X11Forwarding', value: 'yes' }
+        - { key: 'PrintMotd', value: 'no' }
+        - { key: 'AcceptEnv', value: 'LANG LC_*' }
+        - { key: 'Subsystem', value: 'sftp /usr/lib/openssh/sftp-server' }
+
+    - name: Restart SSH service to apply changes
+      service:
+        name: ssh
+        state: restarted
