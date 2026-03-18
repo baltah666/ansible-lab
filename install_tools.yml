@@ -12,10 +12,19 @@
   - name: Install network troubleshooting tools
     apt:
       name:
+        -  openssh-server
+        - iproute2
+        - iputils-ping
+        - nano
+        - wget
         - tcpdump
         - dnsutils
         - net-tools
         - iperf3
         - traceroute
         - nmap
+        - snmp
+        - snmpd
+        - python3
+        - python3-pip
       state: present
