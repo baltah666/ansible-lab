@@ -1,0 +1,21 @@
+- name: Prepare all Linux nodes
+  hosts: linux_nodes
+  become: yes
+  gather_facts: no
+
+  tasks:
+
+  - name: Update package cache
+    apt:
+      update_cache: yes
+
+  - name: Install network troubleshooting tools
+    apt:
+      name:
+        - tcpdump
+        - dnsutils
+        - net-tools
+        - iperf3
+        - traceroute
+        - nmap
+      state: present

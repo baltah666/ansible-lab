@@ -1,0 +1,13 @@
+[ubuntu_nodes]
+toolbox2 ansible_host=192.168.20.100
+toolbox3 ansible_host=192.168.30.100
+toolbox4 ansible_host=192.168.40.100
+toolbox5 ansible_host=192.168.20.101
+toolbox6 ansible_host=192.168.30.101
+toolbox7 ansible_host=192.168.40.101
+
+[ubuntu_nodes:vars]
+ansible_user=root
+ansible_password=gns3
+ansible_connection=ssh
+ansible_python_interpreter=/usr/bin/python3
